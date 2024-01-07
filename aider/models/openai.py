@@ -3,17 +3,22 @@ import re
 import tiktoken
 
 from .model import Model
+from transformers import AutoTokenizer
 
 known_tokens = {
     "gpt-3.5-turbo": 4,
     "gpt-4": 8,
     "gpt-4-1106-preview": 128,
     "gpt-3.5-turbo-1106": 16,
+    "mistralai/Mistral-7B-Instruct-v0.2": 32,
+    "mistralai/Mixtral-8x7B-Instruct-v0.1": 32
 }
 
 
 class OpenAIModel(Model):
-    def __init__(self, name):
+    def __init__(self, name, hf_model = False):
+        hf_model = True
+        name = "mistralai/Mixtral-8x7B-Instruct-v0.1"
         self.name = name
 
         tokens = None
@@ -30,7 +35,19 @@ class OpenAIModel(Model):
             raise ValueError(f"Unknown context window size for model: {name}")
 
         self.max_context_tokens = tokens * 1024
-        self.tokenizer = tiktoken.encoding_for_model(name)
+        if hf_model:
+            self.tokenizer = AutoTokenizer.from_pretrained(name)
+        else:
+            self.tokenizer = tiktoken.encoding_for_model(name)
+
+        if name == "mistralai/Mistral-7B-Instruct-v0.2" or name == "mistralai/Mixtral-8x7B-Instruct-v0.1":
+            self.edit_format = "diff"
+            self.always_available = True
+            self.send_undo_reply = False  
+            self.prompt_price = 0
+            self.completion_price = 0
+            self.max_chat_history_tokens = 2 * 1024
+            return       
 
         if self.is_gpt4():
             if name == "gpt-4-1106-preview":
