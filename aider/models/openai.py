@@ -42,6 +42,7 @@ class OpenAIModel(Model):
 
         if name == "mistralai/Mistral-7B-Instruct-v0.2" or name == "mistralai/Mixtral-8x7B-Instruct-v0.1":
             self.edit_format = "diff"
+            self.use_repo_map = True
             self.always_available = True
             self.send_undo_reply = False  
             self.prompt_price = 0
