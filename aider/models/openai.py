@@ -8,6 +8,7 @@ from transformers import AutoTokenizer
 known_tokens = {
     "gpt-3.5-turbo": 4,
     "gpt-4": 8,
+    "HuggingFaceH4/zephyr-7b-beta": 32,
     "gpt-4-1106-preview": 128,
     "gpt-3.5-turbo-1106": 16,
     "mistralai/Mistral-7B-Instruct-v0.2": 32,
