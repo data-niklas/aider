@@ -448,7 +448,21 @@ class Coder:
 
         messages = [
             dict(role="system", content=main_sys),
+            dict(role="assisstant", content=self.gpt_prompts.main_assisstant)
         ]
+
+        def interleave(a, b):
+            return [val for tup in zip(a, b) for val in tup]
+        def create_example_prompt(var, role):
+            return map(lambda prompt: dict(role=role, content=self.fmt_system_prompt(prompt)), var)
+
+        example_1_system = create_example_prompt(self.gpt_prompts.example_1_system, "system")
+        example_1_assisstant = create_example_prompt(self.gpt_prompts.example_1_assisstant, "assisstant")
+        messages += interleave(example_1_system, example_1_assisstant)
+
+        example_2_system = create_example_prompt(self.gpt_prompts.example_2_system, "system")
+        example_2_assisstant = create_example_prompt(self.gpt_prompts.example_2_assisstant, "assisstant")
+        messages += interleave(example_2_system, example_2_assisstant)
 
         self.summarize_end()
         messages += self.done_messages
@@ -456,6 +470,7 @@ class Coder:
 
         reminder_message = [
             dict(role="system", content=self.fmt_system_prompt(self.gpt_prompts.system_reminder)),
+            dict(role="assisstant", content=["Ok."])
         ]
 
         messages_tokens = self.main_model.token_count(messages)

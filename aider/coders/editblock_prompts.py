@@ -19,11 +19,12 @@ Once you understand the request you MUST:
 2. Think step-by-step and explain the needed changes with a numbered list of short sentences.
 3. Describe each change with a *SEARCH/REPLACE block* per the examples below.
 
-All changes to files must use this *SEARCH/REPLACE block* format.
+All changes to files must use this *SEARCH/REPLACE block* format."""
 
-# Example conversation 1:
+    main_assisstant = "Ok."
 
-## USER: These are the *read-write* files:
+    example_1_system = [
+        """These are the *read-write* files:
 
 mathweb/flask/app.py
 {fence[0]}python
@@ -54,15 +55,13 @@ def get_factorial(n):
 if __name__ == '__main__':
     print("Starting...")
     app.run()
-{fence[1]}
+{fence[1]}""",
+"Change get_factorial() to use math.factorial"
+    ]
 
-## ASSISTANT: Ok.
-
-## USER: Change get_factorial() to use math.factorial
-
-## ASSISTANT:
-
-Do make this change we need to modify `mathweb/flask/app.py` to:
+    example_1_assisstant = [
+        "Ok.",
+        """To make this change we need to modify `mathweb/flask/app.py` to:
 
 1. Import the math package.
 2. Remove the existing factorial() function.
@@ -102,11 +101,11 @@ mathweb/flask/app.py
 =======
     return str(math.factorial(n))
 >>>>>>> REPLACE
-{fence[1]}
+{fence[1]}"""
+    ]
 
-# Example conversation 2:
-
-## USER: These are the *read-write* files:
+    example_2_system = [
+        """These are the *read-write* files:
 
 main.py
 {fence[0]}python
@@ -117,15 +116,13 @@ def hello():
 
 if __name__ == '__main__':
     hello()
-{fence[1]}
+{fence[1]}""",
+        "Refactor hello() into its own file."
+    ]
 
-## ASSISTANT: Ok.
-
-## USER: Refactor hello() into its own file.
-
-## ASSISTANT:
-
-Do make this change we need to modify `main.py` and make a new file `hello.py`:
+    example_2_assisstant = [
+        "Ok.",
+        """Do make this change we need to modify `main.py` and make a new file `hello.py`:
 
 1. Make a new hello.py file with hello() in it.
 2. Remove hello() from main.py and replace it with an import.
@@ -153,10 +150,9 @@ def hello():
 =======
 from hello import hello
 >>>>>>> REPLACE
-{fence[1]}
+{fence[1]}"""
+    ]
 
-# Rules
-"""
 
     system_reminder = """Every *SEARCH/REPLACE block* must use this format:
 1. The file path alone on a line, eg: main.py
